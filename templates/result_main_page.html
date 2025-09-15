@@ -20,17 +20,33 @@
 <img src="{{ fifth_img_url }}" alt=" {{ fifth_img_name }}" style="width:800px; height:500px; border: 2px solid #ccc; align-content: center"><br>
 <h5>{{ fifth_img_name }}</h5><br>
 
+ <div id="map_container" style="width: 800px; height: 600px; border: 1px solid #ccc;">
+        {{ map_html | safe }}
+    </div>
+
+<h3>Near places to {{ user_input }}</h3>
+<ol>
+    <li> {{ near_place_one_city }} </li>  <li> {{ near_place_one_distance }} km </li>
+    <li> {{ near_place_two_city }} </li>  <li> {{ near_place_two_distance }} km </li>
+    <li> {{ near_place_three_city }} </li>  <li> {{ near_place_three_distance }}km </li>
+    <li> {{ near_place_four_city }} </li>  <li> {{ near_place_four_distance }} km </li>
+    <li> {{ near_place_five_city }} </li>  <li> {{ near_place_five_distance }} km </li>
+
+
+
+
+</ol>
 
  <h3>Weather Details</h3>
 
  reference_time= {{ reference_time }}  <br>
     detailed_status=   {{   detailed_status  }}  <br>
         general_status=    {{ general_status }}<br>
-          wind_direction=                              {{   wind_direction }}<br>
-                   wind_speed=                     {{   wind_speed }}<br>
-                    humidity=                    {{   humidity }}<br>
-             temp_max=                          {{    temp_max }}<br>
-         temp_min={{    temp_min }}<br>
+          wind_direction=  {{   wind_direction }}<br>
+                   wind_speed= {{   wind_speed }}<br>
+                    humidity=   {{   humidity }}<br>
+             temp_max= {{    temp_max }}<br>
+         temp_min={{ temp_min }}<br>
            temp_normal={{    temp_normal }}<br>
 
                             heat_index=           {{    heat_index }}<br>
@@ -48,9 +64,7 @@
 
 
 
-    <div id="map_container" style="width: 800px; height: 600px; border: 1px solid #ccc;">
-        {{ map_html | safe }}
-    </div>
+
 
 {% endblock %}
 

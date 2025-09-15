@@ -12,7 +12,7 @@ import http.client
 import json
 import urllib.parse
 from helpers import current_local_time
-from database.database import get_country_or_city_input,get_current_query_data,store_log_data_db,store_weather_data_db
+from database.database import get_image_data,add_image_data, get_country_or_city_input,get_current_query_data,store_log_data_db,store_weather_data_db
 result_page_1_bp=Blueprint('result_page_1', __name__, template_folder='templates', static_folder='static')
 
 
@@ -126,10 +126,9 @@ def show_page_one_data():
 
                 store_weather_data_db(
                     email=session.get('email'),
-                    unique_id=unique_id,
+                    unique_id=session.get('log_data_unique_id'),
                     reference_time=reference_time,
                     details_about=country_or_city_input,
-
                     detailed_status=detailed_status,
                     general_status=general_status,
                     wind_direction=wind_direction,
@@ -156,11 +155,9 @@ def show_page_one_data():
                     wind_speed: {wind_speed}\n
                     humidity: {humidity}\n
                     temperature: {temperature}\n    
-                   
                     heat_index: {heat_index}\n
                     clouds: {clouds}\n
                     pressure: {pressure}\n
-                    
                     visibility_distance: {visibility_distance}\n
                     sunrise_time: {sunrise_time}\n
                     sunset_time: {sunset_time}\n
@@ -169,12 +166,18 @@ def show_page_one_data():
                 local_time = current_local_time()
                 stored_data = get_current_query_data(session.get('log_data_unique_id'))
                 if stored_data:
-                    store_log_data_db(stored_data[0], stored_data[1], stored_data[2], local_time, "Openweather api fetch success")
+                    store_log_data_db(
+                        stored_data[0],
+                        stored_data[1],
+                        stored_data[2],
+                        local_time,
+                        "Openweather api fetch success")
                 else:
                     print("No log data found for the given time.")
 
                 get_map=get_map_data()
                 imges=get_pexels_data()
+                near_places=show_near_places()
                 return render_template("result_main_page.html",
                                        reference_time=reference_time,
                                        detailed_status=detailed_status,
@@ -208,7 +211,20 @@ def show_page_one_data():
                                        fourth_img_name=imges[3]["img_name"],
                                        fourth_img_url=imges[3]["url"],
                                        fifth_img_name=imges[4]["img_name"],
-                                       fifth_img_url=imges[4]["url"]
+                                       fifth_img_url=imges[4]["url"],
+
+                                       near_place_one_city=near_places[0]["city"],
+                                       near_place_one_distance=near_places[0]["distance"],
+                                       near_place_two_city=near_places[1]["city"],
+                                       near_place_two_distance=near_places[1]["distance"],
+                                       near_place_three_city=near_places[2]["city"],
+                                       near_place_three_distance=near_places[2]["distance"],
+                                       nedar_place_four_city=near_places[3]["city"],
+                                       nedar_place_four_distance=near_places[3]["distance"],
+                                       nedar_place_five_city=near_places[4]["city"],
+                                       nedar_place_five_distance=near_places[4]["distance"]
+
+
 
                                        )
 
@@ -216,7 +232,11 @@ def show_page_one_data():
 
                 local_time = current_local_time()
                 stored_data=get_current_query_data(session.get('log_data_unique_id'))
-                store_log_data_db(stored_data[0],stored_data[1],stored_data[2],local_time,e)
+                store_log_data_db(
+                    stored_data[0],
+                    stored_data[1],
+                    stored_data[2],
+                    local_time,e)
                 print(e)
 
 
@@ -225,37 +245,103 @@ def show_page_one_data():
         return  render_template("result_main_page.html")
 
 def get_pexels_data():
-    country_or_city_input = get_country_or_city_input(session.get('log_data_unique_id'))
+    try:
+        country_or_city_input = get_country_or_city_input(session.get('log_data_unique_id'))
 
-    API_KEY = os.environ.get("PIXELS_API_KEY")
-    api = API(API_KEY)
+        API_KEY = os.environ.get("PIXELS_API_KEY")
+        api = API(API_KEY)
 
-    # Initial search
-    api.search(country_or_city_input, results_per_page=5)
-    photos = api.get_entries()
-    img_data=[]
+        # Initial search
+        api.search(country_or_city_input, results_per_page=5)
+        photos = api.get_entries()
+        img_data=[]
 
 
-    if photos:
-        for photo in photos:
-            img_data_dict = {
-                "img_name": "",
-                "url": ""
-            }
-            img_data_dict["img_name"]=photo.img_name()
-            img_data_dict["url"]=photo.url()
-            img_data.append(img_data_dict)
-            print("Photo url: ", photo.url())
-            print("Photo name: ", photo.img_name())
+        if photos:
+            for photo in photos:
+                img_data_dict = {
+                    "img_name": "",
+                    "url": ""
+                }
+                img_data_dict["img_name"]=photo.img_name()
+                img_data_dict["url"]=photo.url()
+                img_data.append(img_data_dict)
+
+                add_image_data(
+                    session.get('log_data_unique_id'),
+                    session.get('email'),
+                    photo.url(),
+                    photo.img_name(),
+                    current_local_time(),
+                    'Pexels api fetch success')
+
+                print("Photo url: ", photo.url())
+                print("Photo name: ", photo.img_name())
+
+            stored_data = get_current_query_data(session.get('log_data_unique_id'))
+            if stored_data:
+                local_time = current_local_time()
+                store_log_data_db(
+                    stored_data[0],
+                    stored_data[1],
+                    stored_data[2],
+                    local_time,
+                    "Pexels api fetch success")
+
+
+        else:
+            print("No photos found.")
+        time.sleep(2)
+        print("dict: ",img_data)
+        return img_data
+    except Exception as e:
+        print(e)
+
+        stored_image_data=get_image_data(session.get('log_data_unique_id'))
+
+        if stored_image_data:
+            add_image_data(
+                session.get('log_data_unique_id'),
+                session.get('email'),
+                stored_image_data[0],
+                stored_image_data[1],
+                current_local_time(),
+                e)
 
         stored_data = get_current_query_data(session.get('log_data_unique_id'))
         if stored_data:
             local_time = current_local_time()
-            store_log_data_db(stored_data[0], stored_data[1], stored_data[2], local_time, "Pexels api fetch success")
+            store_log_data_db(
+                stored_data[0],
+                stored_data[1],
+                stored_data[2],
+                local_time,
+                e)
 
+        return False
 
-    else:
-        print("No photos found.")
-    time.sleep(2)
-    print("dict: ",img_data)
-    return img_data
+def show_near_places():
+    conn = http.client.HTTPSConnection("wft-geo-db.p.rapidapi.com")
+
+    headers = {
+        'x-rapidapi-key': "9b7c9d2e99msh91a2a51875d27bcp19318ejsn6e1c032e0a1f",
+        'x-rapidapi-host': "wft-geo-db.p.rapidapi.com"
+    }
+
+    conn.request("GET", "/v1/geo/cities/Q60/nearbyCities?radius=100", headers=headers)
+
+    res = conn.getresponse()
+
+    data = json.loads(res.read().decode("utf-8"))
+    list = []
+    dict_location = data['data']
+    for i in dict_location:
+        dict = {
+            "city": i.get("city"),
+            "distance": i.get("distance")
+        }
+        list.append(dict)
+
+    print("\n\nNear Places: ", list)
+    print("Near Places Length: ", len(list))
+    return list

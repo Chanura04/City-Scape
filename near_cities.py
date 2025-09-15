@@ -1,5 +1,5 @@
 import http.client
-
+import json
 conn = http.client.HTTPSConnection("wft-geo-db.p.rapidapi.com")
 
 headers = {
@@ -10,6 +10,19 @@ headers = {
 conn.request("GET", "/v1/geo/cities/Q60/nearbyCities?radius=100", headers=headers)
 
 res = conn.getresponse()
-data = res.read()
 
-print(data.decode("utf-8"))
+data = json.loads(res.read().decode("utf-8"))
+list=[]
+dict_location=data['data']
+for i in dict_location:
+    dict={
+        "city":i.get("city"),
+        "distance":i.get("distance")
+    }
+    list.append(dict)
+    # print(dict)
+    # near_cities=i.get("city")
+    # distance=i.get("distance")
+
+print("Near Places: ",list)
+print("Near Places Length: ",len(list))

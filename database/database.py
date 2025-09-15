@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker
-from .models import user_data_model ,store_log_data,store_weather_data
+from .models import user_data_model ,store_log_data,store_weather_data,store_image_data
 import os
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -279,7 +279,33 @@ def get_weather_data(unique_id):
 # Photo name:  Stunning view of Sydney's skyline featuring the Harbour Bridge and Opera House under a clear blue sky.
 # Photo url:  https://images.pexels.com/photos/995764/pexels-photo-995764.jpeg
 # Photo name:  Captivating view of Sydney's illuminated skyline with the iconic Opera House and harbor at night.
-#
-#
-#
-#
+
+def add_image_data(unique_id,email,image_url,image_name, updated_time,status):
+    session=SessionLocal()
+    try:
+        image_data= store_image_data.ImageData(
+            unique_id=unique_id,
+            image_url=image_url,
+            image_name=image_name,
+            email=email,
+            updated_time=updated_time,
+            query_status=status
+        )
+        session.add(image_data)
+        session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def get_image_data(unique_id):
+    session = SessionLocal()
+    try:
+        image_data = session.query(store_image_data.ImageData).filter(store_image_data.ImageData.unique_id == unique_id).first()
+        if image_data:
+            return [image_data.image_url,image_data.image_name]
+        else:
+            return False
+    except Exception as e:
+        print(e)
