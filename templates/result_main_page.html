@@ -23,7 +23,7 @@
  <div id="map_container" style="width: 800px; height: 600px; border: 1px solid #ccc;">
         {{ map_html | safe }}
     </div>
-
+<br>
 <h3>Near places to {{ user_input }}</h3>
 <ol>
     <li> {{ near_place_one_city }} </li>  <li> {{ near_place_one_distance }} km </li>
@@ -32,11 +32,8 @@
     <li> {{ near_place_four_city }} </li>  <li> {{ near_place_four_distance }} km </li>
     <li> {{ near_place_five_city }} </li>  <li> {{ near_place_five_distance }} km </li>
 
-
-
-
 </ol>
-
+<br>
  <h3>Weather Details</h3>
 
  reference_time= {{ reference_time }}  <br>

@@ -102,6 +102,7 @@ def get_local_time(user_input: str):
     conn.request("GET", f"/v1/geo/cities?namePrefix={encoded_input}", headers=headers)
     res = conn.getresponse()
     data = json.loads(res.read().decode("utf-8"))
+    print(data)
 
     if "data" not in data or not data["data"]:
         return f"No results found for {user_input}"
@@ -137,7 +138,7 @@ def get_local_time(user_input: str):
 
 # 🔎 Example usage
 # print(get_local_time("Sydney"))   # city
-print(get_local_time("SriLanka"))
+print(get_local_time("Sydney"))
 
 
 

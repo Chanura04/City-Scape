@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker
-from .models import user_data_model ,store_log_data,store_weather_data,store_image_data
+from .models import user_data_model ,store_log_data,store_weather_data,store_image_data,store_near_cities_model
 import os
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -309,3 +309,33 @@ def get_image_data(unique_id):
             return False
     except Exception as e:
         print(e)
+
+def add_near_city_data_db(unique_id,email,user_input,city_name,distance,updated_time,status):
+    session=SessionLocal()
+    try:
+        city_data= store_near_cities_model.CityData(
+            unique_id=unique_id,
+            details_about=user_input,
+            city_name=city_name,
+            distance=distance,
+            email=email,
+            updated_time=updated_time,
+            query_status=status
+        )
+        session.add(city_data)
+        session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def get_near_cities_data(unique_id):
+    session = SessionLocal()
+    try:
+        city_data = session.query(store_near_cities_model.CityData).filter(store_near_cities_model.CityData.unique_id == unique_id).first()
+        if city_data:
+            return [city_data.details_about,city_data.city_name,city_data.distance]
+        else:
+            return False
+    except Exception as e:
+            print(e)

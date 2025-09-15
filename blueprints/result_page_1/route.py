@@ -12,7 +12,7 @@ import http.client
 import json
 import urllib.parse
 from helpers import current_local_time
-from database.database import get_image_data,add_image_data, get_country_or_city_input,get_current_query_data,store_log_data_db,store_weather_data_db
+from database.database import get_image_data,add_image_data, get_country_or_city_input,get_current_query_data,store_log_data_db,store_weather_data_db,add_near_city_data_db,get_near_cities_data
 result_page_1_bp=Blueprint('result_page_1', __name__, template_folder='templates', static_folder='static')
 
 
@@ -44,6 +44,7 @@ def get_map_data():
 
     first = data["data"][0]
     wikiDataId = first.get("wikiDataId")
+    session['wikiDataId']=wikiDataId
     country_code = first.get("countryCode")
     city_name = first.get("city")
     lat = first.get("latitude")
@@ -321,27 +322,64 @@ def get_pexels_data():
         return False
 
 def show_near_places():
-    conn = http.client.HTTPSConnection("wft-geo-db.p.rapidapi.com")
+    try:
+        conn = http.client.HTTPSConnection("wft-geo-db.p.rapidapi.com")
 
-    headers = {
-        'x-rapidapi-key': "9b7c9d2e99msh91a2a51875d27bcp19318ejsn6e1c032e0a1f",
-        'x-rapidapi-host': "wft-geo-db.p.rapidapi.com"
-    }
+        wikiDataId=session.get('wikiDataId')
 
-    conn.request("GET", "/v1/geo/cities/Q60/nearbyCities?radius=100", headers=headers)
-
-    res = conn.getresponse()
-
-    data = json.loads(res.read().decode("utf-8"))
-    list = []
-    dict_location = data['data']
-    for i in dict_location:
-        dict = {
-            "city": i.get("city"),
-            "distance": i.get("distance")
+        headers = {
+            'x-rapidapi-key': "9b7c9d2e99msh91a2a51875d27bcp19318ejsn6e1c032e0a1f",
+            'x-rapidapi-host': "wft-geo-db.p.rapidapi.com"
         }
-        list.append(dict)
 
-    print("\n\nNear Places: ", list)
-    print("Near Places Length: ", len(list))
-    return list
+        conn.request("GET", f"/v1/geo/cities/{wikiDataId}/nearbyCities?radius=100", headers=headers)
+
+        res = conn.getresponse()
+
+        data = json.loads(res.read().decode("utf-8"))
+        list = []
+        dict_location = data['data']
+        for i in dict_location:
+            dict = {
+                "city": i.get("city"),
+                "distance": i.get("distance")
+            }
+            list.append(dict)
+            add_near_city_data_db(
+                session.get('log_data_unique_id'),
+                session.get('email'),
+                wikiDataId,
+                i.get("city"),
+                i.get("distance"),
+                current_local_time(),
+            "Nearby cities api fetch success")
+
+
+        print("\n\nNear Places: ", list)
+        print("Near Places Length: ", len(list))
+        return list
+    except Exception as e:
+        print(e)
+
+        stored_near_cities_data = get_near_cities_data(session.get('log_data_unique_id'))
+
+        if stored_near_cities_data:
+            add_image_data(
+                session.get('log_data_unique_id'),
+                session.get('email'),
+                stored_near_cities_data[0],
+                stored_near_cities_data[1],
+                current_local_time(),
+                e)
+
+        stored_data = get_current_query_data(session.get('log_data_unique_id'))
+        if stored_data:
+            local_time = current_local_time()
+            store_log_data_db(
+                stored_data[0],
+                stored_data[1],
+                stored_data[2],
+                local_time,
+                e)
+
+        return False
