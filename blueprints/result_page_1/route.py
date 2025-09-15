@@ -1,5 +1,5 @@
 import uuid
-
+from .api_details_pexels import API
 import folium
 import requests
 from flask import Blueprint, render_template, session, request, redirect, url_for
@@ -87,11 +87,9 @@ def get_map_data():
 def show_page_one_data():
 
         if session.get('email'):
-
-            country_or_city_input=get_country_or_city_input(session.get('log_data_unique_id'))
-            print(f"country_or_city_input: {country_or_city_input}")
-
             try:
+                country_or_city_input = get_country_or_city_input(session.get('log_data_unique_id'))
+                print(f"country_or_city_input: {country_or_city_input}")
 
                 OPENWEATHER_KEY = os.getenv("OPENWEATHER")
 
@@ -130,6 +128,8 @@ def show_page_one_data():
                     email=session.get('email'),
                     unique_id=unique_id,
                     reference_time=reference_time,
+                    details_about=country_or_city_input,
+
                     detailed_status=detailed_status,
                     general_status=general_status,
                     wind_direction=wind_direction,
@@ -169,13 +169,14 @@ def show_page_one_data():
                 local_time = current_local_time()
                 stored_data = get_current_query_data(session.get('log_data_unique_id'))
                 if stored_data:
-                    store_log_data_db(stored_data[0], stored_data[1], stored_data[2], local_time, "api fetch success")
+                    store_log_data_db(stored_data[0], stored_data[1], stored_data[2], local_time, "Openweather api fetch success")
                 else:
                     print("No log data found for the given time.")
 
                 get_map=get_map_data()
+                imges=get_pexels_data()
                 return render_template("result_main_page.html",
-                                       refrence_time=reference_time,
+                                       reference_time=reference_time,
                                        detailed_status=detailed_status,
                                        general_status=general_status,
                                        wind_direction=wind_direction,
@@ -196,7 +197,19 @@ def show_page_one_data():
                                        map_html=get_map[0],
                                        date=get_map[1],
                                        time=get_map[2],
-                                       country_code=get_map[3]
+                                       country_code=get_map[3],
+
+                                       first_img_name=imges[0]["img_name"],
+                                       first_img_url=imges[0]["url"],
+                                       second_img_name=imges[1]["img_name"],
+                                       second_img_url=imges[1]["url"],
+                                       third_img_name=imges[2]["img_name"],
+                                       third_img_url=imges[2]["url"],
+                                       fourth_img_name=imges[3]["img_name"],
+                                       fourth_img_url=imges[3]["url"],
+                                       fifth_img_name=imges[4]["img_name"],
+                                       fifth_img_url=imges[4]["url"]
+
                                        )
 
             except Exception as e:
@@ -211,5 +224,38 @@ def show_page_one_data():
             return redirect(url_for("auth.login"))
         return  render_template("result_main_page.html")
 
-def get_wikiMedia_data():
-    pass
+def get_pexels_data():
+    country_or_city_input = get_country_or_city_input(session.get('log_data_unique_id'))
+
+    API_KEY = os.environ.get("PIXELS_API_KEY")
+    api = API(API_KEY)
+
+    # Initial search
+    api.search(country_or_city_input, results_per_page=5)
+    photos = api.get_entries()
+    img_data=[]
+
+
+    if photos:
+        for photo in photos:
+            img_data_dict = {
+                "img_name": "",
+                "url": ""
+            }
+            img_data_dict["img_name"]=photo.img_name()
+            img_data_dict["url"]=photo.url()
+            img_data.append(img_data_dict)
+            print("Photo url: ", photo.url())
+            print("Photo name: ", photo.img_name())
+
+        stored_data = get_current_query_data(session.get('log_data_unique_id'))
+        if stored_data:
+            local_time = current_local_time()
+            store_log_data_db(stored_data[0], stored_data[1], stored_data[2], local_time, "Pexels api fetch success")
+
+
+    else:
+        print("No photos found.")
+    time.sleep(2)
+    print("dict: ",img_data)
+    return img_data

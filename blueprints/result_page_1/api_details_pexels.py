@@ -1,21 +1,5 @@
 import requests
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-
-class Photo:
-    def __init__(self, json_photo):
-        self.__photo = json_photo
-
-    def url(self):
-        return self.__photo["src"]["original"]
-    def img_name(self):
-        return self.__photo["alt"]
-
-
-""" Class """
+from .photo_details_pexels import Photo
 
 
 class API:
@@ -67,37 +51,3 @@ class API:
         else:
             return None
         return self.json
-
-
-API_KEY = os.environ.get("PIXELS_API_KEY")
-api = API(API_KEY)
-
-# Initial search
-api.search("Sydney", results_per_page=5)
-photos = api.get_entries()
-img_data=[]
-img_data_dict={}
-
-if photos:
-        for photo in photos:
-            img_data_dict["img_name"]=photo.img_name()
-            img_data_dict["url"]=photo.url()
-            img_data.append(img_data_dict)
-            print("Photo url: ", photo.url())
-            print("Photo name: ", photo.img_name())
-        print(img_data)
-# while True:
-#     # Get all photos in the current page
-#     photos = api.get_entries()
-#
-#     # Check if photos is not None before iterating
-#     if photos:
-#         for photo in photos:
-#             print("Photo url: ", photo.url())
-#
-#     if not api.has_next_page:
-#         print("Last page reached.")
-#         break
-
-    # # Search for the next page
-    # api.search_next_page()

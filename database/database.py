@@ -184,6 +184,7 @@ def store_weather_data_db(
         unique_id,
         email,
         reference_time,
+        details_about,
         detailed_status,
         general_status,
         wind_direction,
@@ -202,10 +203,6 @@ def store_weather_data_db(
         sunset_time,
         updated_time,
         query_status
-
-
-
-
     ):
     session=SessionLocal()
     try:
@@ -213,6 +210,8 @@ def store_weather_data_db(
             unique_id=unique_id,
             email=email,
             reference_time=reference_time,
+            details_about=details_about,
+
             detailed_status=detailed_status,
             general_status=general_status,
             wind_direction=wind_direction,
@@ -230,7 +229,7 @@ def store_weather_data_db(
             sunrise_time=sunrise_time,
             sunset_time=sunset_time,
             updated_time=updated_time,
-                query_status=query_status
+            query_status=query_status
         )
         session.add(weather_data)
         session.commit()
@@ -254,14 +253,13 @@ def get_weather_data(unique_id):
                 weather_data.temp_max,
                 weather_data.temp_min,
                 weather_data.temp_normal,
-                weather_data.rain,
                 weather_data.heat_index,
                 weather_data.clouds,
                 weather_data.pressure,
-                weather_data.snow,
                 weather_data.visibility_distance,
                 weather_data.sunrise_time,
-                weather_data.sunset_time]
+                weather_data.sunset_time
+            ]
         else:
             return False
     except Exception as e:
@@ -270,15 +268,18 @@ def get_weather_data(unique_id):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+#
+# Photo url:  https://images.pexels.com/photos/1619854/pexels-photo-1619854.jpeg
+# Photo name:  Stunning aerial view capturing Sydney Opera House and Harbour Bridge in daylight.
+# Photo url:  https://images.pexels.com/photos/995765/pexels-photo-995765.jpeg
+# Photo name:  A stunning view of the Sydney Opera House and harbor illuminated at twilight, showcasing city life and architecture.
+# Photo url:  https://images.pexels.com/photos/1878293/pexels-photo-1878293.jpeg
+# Photo name:  Beautiful view of the Sydney Opera House and its reflection at dusk, highlighting iconic architecture.
+# Photo url:  https://images.pexels.com/photos/783682/pexels-photo-783682.jpeg
+# Photo name:  Stunning view of Sydney's skyline featuring the Harbour Bridge and Opera House under a clear blue sky.
+# Photo url:  https://images.pexels.com/photos/995764/pexels-photo-995764.jpeg
+# Photo name:  Captivating view of Sydney's illuminated skyline with the iconic Opera House and harbor at night.
+#
+#
+#
+#

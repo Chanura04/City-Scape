@@ -10,6 +10,7 @@ class WeatherData(Base):
     unique_id = Column(String, nullable=False)
     email = Column(String, nullable=False)
     reference_time= Column(String )
+    details_about= Column(String )
     detailed_status= Column(String )
     general_status= Column(String )
     wind_direction= Column(String )
