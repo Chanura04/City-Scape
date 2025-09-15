@@ -1,0 +1,39 @@
+{% extends 'index.html' %}
+
+{% block body %}
+
+<div class="dashboard-container">
+{% if role == 'user' %}
+
+
+
+
+    <div class="main-content">
+
+        <div class="welcome-content">
+            <div class="hero-section">
+                <hr>
+                {% if username %}
+                    <h3  >Welcome back, {{ username }}! 🎉</h3>
+                {% endif %}
+                <hr>
+            </div>
+        </div>
+
+        <div class="container">
+             <form action="{{url_for('dashboard.dashboard')}}" method="POST" id="auth-form">
+                 <label for="country_or_city_input">Enter a country or city:</label>
+                <input type="text" name="country_or_city_input" id="country_or_city_input" placeholder="Country/City" class="input-field" required>
+
+                <input type="submit" value="Explor" class="btn btn-login" >
+
+             </form>
+
+
+        </div>
+
+    </div>
+{% endif %}
+</div>
+
+{% endblock %}

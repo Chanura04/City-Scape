@@ -1,0 +1,52 @@
+{% extends "index.html" %}
+{% block body %}
+
+
+
+{{ user_input }}
+
+
+ <h3>Weather Details</h3>
+
+ refrence_time= {{ refrence_time }}  <br>
+    detailed_status=   {{   detailed_status  }}  <br>
+        general_status=    {{ general_status }}<br>
+          wind_direction=                              {{   wind_direction }}<br>
+                   wind_speed=                     {{   wind_speed }}<br>
+                    humidity=                    {{   humidity }}<br>
+             temp_max=                          {{    temp_max }}<br>
+         temp_min={{    temp_min }}<br>
+           temp_normal={{    temp_normal }}<br>
+
+                            heat_index=           {{    heat_index }}<br>
+                           clouds=           {{     clouds }}<br>
+                            pressure=          {{     pressure }}<br>
+
+               visibility_distance= {{     visibility_distance }}<br>
+                 sunrise_time= {{   sunrise_time }}<br>
+               sunset_time= {{   sunset_time }}<br>
+
+            Data = {{ data }}<br>
+            time = {{ time }}<br>
+            country_code = {{ country_code }}<br>
+
+
+
+
+    <div id="map_container" style="width: 800px; height: 600px; border: 1px solid #ccc;">
+        {{ map_html | safe }}
+    </div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+

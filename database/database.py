@@ -1,0 +1,284 @@
+from sqlalchemy import create_engine
+from dotenv import load_dotenv
+from sqlalchemy.orm import sessionmaker
+from .models import user_data_model ,store_log_data,store_weather_data
+import os
+from datetime import datetime
+from zoneinfo import ZoneInfo
+from flask import session
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine)
+
+def store_user_data(first_name, last_name, email, password,fernet_key,account_created_on,signup_status,account_status, role):
+    session = SessionLocal()
+    try:
+        user_data = user_data_model.UserData(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=password,
+            fernet_key=fernet_key,
+            account_created_on=account_created_on,
+            signup_status=signup_status,
+            account_status=account_status,
+            role=role
+        )
+        print(user_data)
+        print(user_data.role)
+        print(user_data.email)
+        print(user_data.password)
+        print(user_data.first_name)
+        print(user_data.last_name)
+        print(user_data.account_created_on)
+        print(user_data.account_updated_on)
+        print(user_data.is_filled_details)
+        session.add(user_data)
+        session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def check_user_exists(email):
+    session = SessionLocal()
+    try:
+        user_data = session.query(user_data_model.UserData).filter(user_data_model.UserData.email == email).first()
+        if user_data:
+            return True
+        else:
+            return False
+
+    except Exception as e:
+        print(e)
+
+def get_current_user_fernet_key(email):
+    session = SessionLocal()
+    try:
+        user_data = session.query(user_data_model.UserData).filter(user_data_model.UserData.email == email).first()
+        if user_data:
+            return user_data.fernet_key
+        else:
+            return False
+    except Exception as e:
+        print(e)
+
+def get_user_password(email):
+    session = SessionLocal()
+    try:
+        user_data = session.query(user_data_model.UserData).filter(user_data_model.UserData.email == email).first()
+        if user_data:
+            return user_data.password
+        else:
+            return False
+    except Exception as e:
+        print(e)
+
+def get_user_role(email):
+    session = SessionLocal()
+    try:
+        user_data = session.query(user_data_model.UserData).filter(user_data_model.UserData.email == email).first()
+        if user_data:
+            return user_data.role
+        else:
+            return False
+    except Exception as e:
+        print(e)
+
+def get_user_first_name(email):
+    session = SessionLocal()
+    try:
+        user_data = session.query(user_data_model.UserData).filter(user_data_model.UserData.email == email).first()
+        if user_data:
+            return user_data.first_name
+        else:
+            return False
+    except Exception as e:
+        print(e)
+
+def update_accountUpdatedOn_column(email):
+    session = SessionLocal()
+    try:
+        user_data = session.query(user_data_model.UserData).filter(user_data_model.UserData.email == email).first()
+        if user_data:
+            sri_lanka_tz = ZoneInfo("Asia/Colombo")
+            local_time = datetime.now(sri_lanka_tz)
+            user_data.account_updated_on =local_time
+            session.commit()
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Election Template Data
+
+def store_log_data_db(
+                unique_id,
+                city_or_country,
+                email,
+                local_time,
+                query_status
+    ):
+    session=SessionLocal()
+    try:
+
+        log_data= store_log_data.LogData(
+            unique_id=unique_id,
+            city_or_country=city_or_country,
+            email=email,
+
+            updated_time=local_time,
+                query_status=query_status
+        )
+        session.add(log_data)
+        session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def get_country_or_city_input(log_data_unique_id):
+    session = SessionLocal()
+    try:
+        log_data = session.query(store_log_data.LogData).filter(store_log_data.LogData.unique_id == log_data_unique_id).first()
+        if log_data:
+            return log_data.city_or_country
+        else:
+            return False
+    except Exception as e:
+        print(e)
+
+
+def get_current_query_data(log_data_unique_id):
+    session = SessionLocal()
+    try:
+        log_data = session.query(store_log_data.LogData).filter(store_log_data.LogData.unique_id == log_data_unique_id).first()
+        if log_data:
+            return [log_data.unique_id,log_data.city_or_country, log_data.email]
+        else:
+            return False
+    except Exception as e:
+        print(e)
+
+
+
+
+def store_weather_data_db(
+        unique_id,
+        email,
+        reference_time,
+        detailed_status,
+        general_status,
+        wind_direction,
+        wind_speed,
+        humidity,
+        temp_max,
+        temp_min,
+        temp_normal,
+
+        heat_index,
+        clouds,
+        pressure,
+
+        visibility_distance,
+        sunrise_time,
+        sunset_time,
+        updated_time,
+        query_status
+
+
+
+
+    ):
+    session=SessionLocal()
+    try:
+        weather_data= store_weather_data.WeatherData(
+            unique_id=unique_id,
+            email=email,
+            reference_time=reference_time,
+            detailed_status=detailed_status,
+            general_status=general_status,
+            wind_direction=wind_direction,
+            wind_speed=wind_speed,
+            humidity=humidity,
+            temp_max=temp_max,
+            temp_min=temp_min,
+            temp_normal=temp_normal,
+
+            heat_index=heat_index,
+            clouds=clouds,
+            pressure=pressure,
+
+            visibility_distance=visibility_distance,
+            sunrise_time=sunrise_time,
+            sunset_time=sunset_time,
+            updated_time=updated_time,
+                query_status=query_status
+        )
+        session.add(weather_data)
+        session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def get_weather_data(unique_id):
+    session = SessionLocal()
+    try:
+        weather_data = session.query(store_weather_data.WeatherData).filter(store_weather_data.WeatherData.unique_id == unique_id).first()
+        if weather_data:
+            return [
+                weather_data.reference_time,
+                weather_data.detailed_status,
+                weather_data.general_status,
+                weather_data.wind_direction,
+                weather_data.wind_speed,
+                weather_data.humidity,
+                weather_data.temp_max,
+                weather_data.temp_min,
+                weather_data.temp_normal,
+                weather_data.rain,
+                weather_data.heat_index,
+                weather_data.clouds,
+                weather_data.pressure,
+                weather_data.snow,
+                weather_data.visibility_distance,
+                weather_data.sunrise_time,
+                weather_data.sunset_time]
+        else:
+            return False
+    except Exception as e:
+        print(e)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
