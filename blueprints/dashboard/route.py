@@ -41,6 +41,6 @@ def dashboard():
 
     if request.method == "GET":
         user_role = session.get('role', 'user')
-        return render_template("dashboard.html" ,username=session.get('username'), role=user_role )
+        return render_template("dashboard.html" ,username=session.get('username'), role=user_role ,error="Please enter a valid city name!")
 
 

@@ -1,62 +1,210 @@
 {% extends "index.html" %}
 {% block body %}
 
+<div class="result-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <h3>📍 {{ user_input }}</h3>
+        <ul>
+            <li><a href="#images-section">🖼️ Gallery</a></li>
+            <li><a href="#map-section">🗺️ Map View</a></li>
+            <li><a href="#near-places">📍 Near Places</a></li>
+            <li><a href="#events-section">📅 Events</a></li>
+            <li><a href="#weather-section">🌤️ Weather</a></li>
+        </ul>
+    </nav>
 
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Destination Header -->
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h1 class="section-header">{{ user_input }}</h1>
+            <p style="font-size: 1.2rem; color: #666;">Discover the beauty and culture of this amazing destination</p>
+        </div>
 
-{{ user_input }}<br>
+        <!-- Images Section -->
+        <section id="images-section" class="images-section">
+            <h2 class="section-header">🖼️ Photo Gallery</h2>
+            <div class="images-grid">
+                <div class="image-card">
+                    <img src="{{ first_img_url }}" alt="{{ first_img_name }}">
+                    <h5>{{ first_img_name }}</h5>
+                </div>
+                <div class="image-card">
+                    <img src="{{ second_img_url }}" alt="{{ second_img_name }}">
+                    <h5>{{ second_img_name }}</h5>
+                </div>
+                <div class="image-card">
+                    <img src="{{ third_img_url }}" alt="{{ third_img_name }}">
+                    <h5>{{ third_img_name }}</h5>
+                </div>
+                <div class="image-card">
+                    <img src="{{ fourth_img_url }}" alt="{{ fourth_img_name }}">
+                    <h5>{{ fourth_img_name }}</h5>
+                </div>
+                <div class="image-card">
+                    <img src="{{ fifth_img_url }}" alt="{{ fifth_img_name }}">
+                    <h5>{{ fifth_img_name }}</h5>
+                </div>
+            </div>
+        </section>
 
-<img src="{{ first_img_url }}" alt=" {{ first_img_name }}" style="width:800px; height:500px; border: 2px solid #ccc; align-content: center"><br>
-<h5>{{ first_img_name }}</h5><br>
+        <!-- Map Section -->
+        <section id="map-section" class="map-container">
+            <h2 class="section-header">🗺️ Interactive Map</h2>
+            <div id="map_container" style="width: 100%; max-width: 900px; height: 600px; border: 1px solid #ccc;">
+                {{ map_html | safe }}
+            </div>
+        </section>
 
-<img src="{{ second_img_url }}" alt=" {{ second_img_name }}" style="width:800px; height:500px; border: 2px solid #ccc; align-content: center"><br>
-<h5>{{ second_img_name }}</h5><br>
+        <!-- Near Places Section -->
+        <section id="near-places" class="near-places">
+            <h3>📍 Nearby Places to {{ user_input }}</h3>
+            <ol>
+                <li>{{ near_place_one_city }} - {{ near_place_one_distance }} km away</li>
+                <li>{{ near_place_two_city }} - {{ near_place_two_distance }} km away</li>
+                <li>{{ near_place_three_city }} - {{ near_place_three_distance }} km away</li>
+                <li>{{ near_place_four_city }} - {{ near_place_four_distance }} km away</li>
+                <li>{{ near_place_five_city }} - {{ near_place_five_distance }} km away</li>
+            </ol>
+        </section>
 
-<img src="{{ third_img_url }}" alt=" {{ third_img_name }}" style="width:800px; height:500px; border: 2px solid #ccc; align-content: center"><br>
-<h5>{{ third_img_name }}</h5><br>
+        <!-- Events Section -->
+        <section id="events-section" class="events-section">
+            <h3>📅 Upcoming Events</h3>
+            <div id="events_container">
+                <div class="event_card">
+                    <img src="{{ first_event_img }}" alt="{{ first_event_name }}">
+                    <p>{{ first_event_name }}</p>
+                    <p>🕐 {{ first_event_start_time }}</p>
+                    <p>📍 {{ first_event_venue }}</p>
+                    <p>📅 {{ first_event_date }}</p>
+                      <p>🎫<a href="{{ first_event_url }}">Book Tickets</a></p>
+                </div>
+                <div class="event_card">
+                    <img src="{{ second_event_img }}" alt="{{ second_event_name }}">
+                    <p>{{ second_event_name }}</p>
+                    <p>🕐 {{ second_event_start_time }}</p>
+                    <p>📍 {{ second_event_venue }}</p>
+                    <p>📅 {{ second_event_date }}</p>
+                      <p>🎫<a href="{{ second_event_url }}" target="_blank">Book Tickets</a></p>
 
-<img src="{{ fourth_img_url }}" alt=" {{ fourth_img_name }}" style="width:800px; height:500px; border: 2px solid #ccc; align-content: center"><br>
-<h5>{{ fourth_img_name }}</h5><br>
+                </div>
+                <div class="event_card">
+                    <img src="{{ third_event_img }}" alt="{{ third_event_name }}">
+                    <p>{{ third_event_name }}</p>
+                    <p>🕐 {{ third_event_start_time }}</p>
+                    <p>📍 {{ third_event_venue }}</p>
+                    <p>📅 {{ third_event_date }}</p>
+                      <p>🎫<a href="{{ third_event_url }}" target="_blank">Book Tickets</a></p>
 
-<img src="{{ fifth_img_url }}" alt=" {{ fifth_img_name }}" style="width:800px; height:500px; border: 2px solid #ccc; align-content: center"><br>
-<h5>{{ fifth_img_name }}</h5><br>
+                </div>
+                <div class="event_card">
+                    <img src="{{ fourth_event_img }}" alt="{{ fourth_event_name }}">
+                    <p>{{ fourth_event_name }}</p>
+                    <p>🕐 {{ fourth_event_start_time }}</p>
+                    <p>📍 {{ fourth_event_venue }}</p>
+                    <p>📅 {{ fourth_event_date }}</p>
+                    <p>🎫<a href="{{ fourth_event_url }}" target="_blank">Book Tickets</a></p>
+                </div>
+                <div class="event_card">
+                    <img src="{{ fifth_event_img }}" alt="{{ fifth_event_name }}">
+                    <p>{{ fifth_event_name }}</p>
+                    <p>🕐 {{ fifth_event_start_time }}</p>
+                    <p>📍 {{ fifth_event_venue }}</p>
+                    <p>📅 {{ fifth_event_date }}</p>
+                      <p>🎫<a href="{{ fifth_event_url }}" target="_blank">Book Tickets</a></p>
+                </div>
+                <div class="event_card">
+                    <img src="{{ sixth_event_img }}" alt="{{ sixth_event_name }}">
+                    <p>{{ sixth_event_name }}</p>
+                    <p>🕐 {{ sixth_event_start_time }}</p>
+                    <p>📍 {{ sixth_event_venue }}</p>
+                    <p>📅 {{ sixth_event_date }}</p>
+                      <p>🎫<a href="{{ sixth_event_url }}" target="_blank">Book Tickets</a></p>
+                </div>
+            </div>
+        </section>
 
- <div id="map_container" style="width: 800px; height: 600px; border: 1px solid #ccc;">
-        {{ map_html | safe }}
-    </div>
-<br>
-<h3>Near places to {{ user_input }}</h3>
-<ol>
-    <li> {{ near_place_one_city }} </li>  <li> {{ near_place_one_distance }} km </li>
-    <li> {{ near_place_two_city }} </li>  <li> {{ near_place_two_distance }} km </li>
-    <li> {{ near_place_three_city }} </li>  <li> {{ near_place_three_distance }}km </li>
-    <li> {{ near_place_four_city }} </li>  <li> {{ near_place_four_distance }} km </li>
-    <li> {{ near_place_five_city }} </li>  <li> {{ near_place_five_distance }} km </li>
+        <!-- Weather Section -->
+        <section id="weather-section" class="weather-section">
+            <h3>🌤️ Weather Details</h3>
+            <div class="weather-grid">
+                <div class="weather-item">
+                    <span class="weather-label">📅 Reference Time:</span>
+                    <span class="weather-value">{{ reference_time }}</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">🌤️ Condition:</span>
+                    <span class="weather-value">{{ detailed_status }}</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">📊 General Status:</span>
+                    <span class="weather-value">{{ general_status }}</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">🧭 Wind Direction:</span>
+                    <span class="weather-value">{{ wind_direction }}°</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">💨 Wind Speed:</span>
+                    <span class="weather-value">{{ wind_speed }} m/s</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">💧 Humidity:</span>
+                    <span class="weather-value">{{ humidity }}%</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">🌡️ Max Temperature:</span>
+                    <span class="weather-value">{{ temp_max }}°C</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">🌡️ Min Temperature:</span>
+                    <span class="weather-value">{{ temp_min }}°C</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">🌡️ Current Temperature:</span>
+                    <span class="weather-value">{{ temp_normal }}°C</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">🔥 Heat Index:</span>
+                    <span class="weather-value">{{ heat_index }}°C</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">☁️ Clouds:</span>
+                    <span class="weather-value">{{ clouds }}%</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">📏 Pressure:</span>
+                    <span class="weather-value">{{ pressure }} hPa</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">👁️ Visibility:</span>
+                    <span class="weather-value">{{ visibility_distance }} km</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">🌅 Sunrise:</span>
+                    <span class="weather-value">{{ sunrise_time }}</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">🌇 Sunset:</span>
+                    <span class="weather-value">{{ sunset_time }}</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">📅 Date:</span>
+                    <span class="weather-value">{{ data }}</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">🕒 Time:</span>
+                    <span class="weather-value">{{ time }}</span>
+                </div>
+                <div class="weather-item">
+                    <span class="weather-label">🌍 Country Code:</span>
+                    <span class="weather-value">{{ country_code }}</span>
 
-</ol>
-<br>
- <h3>Weather Details</h3>
-
- reference_time= {{ reference_time }}  <br>
-    detailed_status=   {{   detailed_status  }}  <br>
-        general_status=    {{ general_status }}<br>
-          wind_direction=  {{   wind_direction }}<br>
-                   wind_speed= {{   wind_speed }}<br>
-                    humidity=   {{   humidity }}<br>
-             temp_max= {{    temp_max }}<br>
-         temp_min={{ temp_min }}<br>
-           temp_normal={{    temp_normal }}<br>
-
-                            heat_index=           {{    heat_index }}<br>
-                           clouds=           {{     clouds }}<br>
-                            pressure=          {{     pressure }}<br>
-
-               visibility_distance= {{     visibility_distance }}<br>
-                 sunrise_time= {{   sunrise_time }}<br>
-               sunset_time= {{   sunset_time }}<br>
-
-            Data = {{ data }}<br>
-            time = {{ time }}<br>
-            country_code = {{ country_code }}<br>
+                </div>
+            </div>
+        </section>
 
 
 

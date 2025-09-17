@@ -6,8 +6,9 @@ headers = {
     'x-rapidapi-key': "9b7c9d2e99msh91a2a51875d27bcp19318ejsn6e1c032e0a1f",
     'x-rapidapi-host': "wft-geo-db.p.rapidapi.com"
 }
+wikiDataId="Q1094194"
 
-conn.request("GET", "/v1/geo/cities/Q60/nearbyCities?radius=100", headers=headers)
+conn.request("GET", f"/v1/geo/cities/{wikiDataId}/nearbyCities?radius=100", headers=headers)
 
 res = conn.getresponse()
 

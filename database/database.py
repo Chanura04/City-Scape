@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker
-from .models import user_data_model ,store_log_data,store_weather_data,store_image_data,store_near_cities_model
+from .models import store_event_data,user_data_model ,store_log_data,store_weather_data,store_image_data,store_near_cities_model
 import os
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -335,6 +335,46 @@ def get_near_cities_data(unique_id):
         city_data = session.query(store_near_cities_model.CityData).filter(store_near_cities_model.CityData.unique_id == unique_id).first()
         if city_data:
             return [city_data.details_about,city_data.city_name,city_data.distance]
+        else:
+            return False
+    except Exception as e:
+            print(e)
+
+
+
+
+
+
+
+def store_event_data_db(unique_id,email,event_name,event_date,event_time,event_location,img_url,updated_time,status):
+    session=SessionLocal()
+    try:
+        event_data= store_event_data.EventData(
+            unique_id=unique_id,
+            event_name=event_name,
+            event_date=event_date,
+            event_time=event_time,
+            email=email,
+            event_location=event_location,
+            image_url=img_url,
+            query_status=status,
+            updated_time=updated_time
+
+
+        )
+        session.add(event_data)
+        session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def get_event_data(unique_id):
+    session = SessionLocal()
+    try:
+        event_data = session.query(store_event_data.EventData).filter(store_event_data.EventData.unique_id == unique_id).first()
+        if event_data:
+            return [event_data.event_name,event_data.event_date,event_data.event_time,event_data.event_location,event_data.image_url]
         else:
             return False
     except Exception as e:

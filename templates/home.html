@@ -1,15 +1,57 @@
 {% extends 'index.html' %}
 {% block body %}
 
+<div class="hero-section">
+    <h1>🌍 Discover Your Dream Destination</h1>
+    <p style="font-size: 1.2rem; color: #666; margin: 1rem 0;">Explore cities, discover hidden gems, and plan your perfect journey</p>
+    <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Get Started</a>
+</div>
 
+<div class="hero-overview">
+    <h2 style="color: #0000cd; font-size: 2.5rem; margin-bottom: 2rem; text-align: center;">Why Choose CityExplorer?</h2>
 
-<h1>Want to explor more about your destination????</h1>
-<a href="{{ url_for('auth.login') }}" class="btn btn-primary" >Get Started</a>
+    <div class="overview-grid">
+        <div class="feature-card">
+            <h3>🏙️ Comprehensive City Data</h3>
+            <p>Get detailed information about any city worldwide. From tourist attractions to local hidden gems, we provide comprehensive insights to help you discover the best places to visit and explore.</p>
+        </div>
 
+        <div class="feature-card">
+            <h3>📸 Stunning Visual Gallery</h3>
+            <p>Browse through beautiful, high-quality images of your destination. See the landmarks, architecture, natural beauty, and cultural highlights before you even arrive.</p>
+        </div>
 
+        <div class="feature-card">
+            <h3>🗺️ Interactive Maps</h3>
+            <p>Explore your destination with detailed interactive maps. Get a clear understanding of the city layout, major attractions, and navigation points all in one place.</p>
+        </div>
 
+        <div class="feature-card">
+            <h3>📅 Live Events & Activities</h3>
+            <p>Discover exciting events happening during your visit. From concerts and festivals to local cultural events, never miss out on what's happening in your destination.</p>
+        </div>
 
+        <div class="feature-card">
+            <h3>🌤️ Real-time Weather</h3>
+            <p>Stay informed with accurate, up-to-date weather information. Plan your activities with detailed forecasts including temperature, humidity, wind conditions, and more.</p>
+        </div>
 
+        <div class="feature-card">
+            <h3>📍 Nearby Attractions</h3>
+            <p>Explore nearby cities and attractions within your reach. Maximize your travel experience by discovering interesting places in the surrounding areas of your main destination.</p>
+        </div>
+    </div>
 
+    <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(0, 0, 205, 0.1), white); border-radius: 15px;">
+        <h3 style="color: #0000cd; font-size: 2rem; margin-bottom: 1rem;">Perfect for City Searchers</h3>
+        <p style="font-size: 1.1rem; color: #555; max-width: 800px; margin: 0 auto; line-height: 1.8;">
+            Whether you're planning a vacation, business trip, or relocating to a new city, CityExplorer provides all the essential information you need. Our platform is specifically designed for travelers and city enthusiasts who want comprehensive, reliable, and up-to-date information about their destinations.
+        </p>
+        <div style="margin-top: 2rem;">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary" style="margin-right: 1rem;">Start Exploring</a>
+            <a href="{{ url_for('auth.signup') }}" class="btn btn-login">Create Account</a>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

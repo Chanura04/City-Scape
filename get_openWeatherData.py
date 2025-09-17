@@ -6,7 +6,7 @@ from pyowm.utils import timestamps
 from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
-city = "Milan"
+# city = "Milan"
 GEODB_KEY=os.environ.get("GEO_DB_KEY")
 OPENWEATHER_KEY=os.getenv("OPENWEATHER")
 # geo_url = f"https://wft-geo-db.p.rapidapi.com/v1/geo/cities"
@@ -62,8 +62,9 @@ mgr = owm.weather_manager()
 
 
 # Search for current weather in London (Great Britain) and get details
-observation = mgr.weather_at_place('sri lanka')
+observation = mgr.weather_at_place('deefefwefw')
 w = observation.weather
+print(f"weather: {w}")
 
 reference_time=w.reference_time(timeformat='iso')   #Time of the weather observation
 detailed_status=w.detailed_status         # 'clouds'   Condition
