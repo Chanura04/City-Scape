@@ -1,13 +1,12 @@
 from sqlalchemy import Column, String, Integer, DateTime, Boolean, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
-
+from .base import Base
 class WeatherData(Base):
     __tablename__ = 'weather_data'
 
     id = Column(Integer, primary_key=True)
-    unique_id = Column(String,ForeignKey('log_data.unique_id'), nullable=False)
+    unique_id = Column(String,ForeignKey('userdata.unique_id'), nullable=False)
     email = Column(String,ForeignKey('userdata.email'), nullable=False)
     reference_time= Column(String )
     details_about= Column(String )

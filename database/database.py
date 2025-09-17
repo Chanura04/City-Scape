@@ -20,7 +20,7 @@ def store_user_data(first_name, last_name, email, password,fernet_key,account_cr
             last_name=last_name,
             email=email,
             password=password,
-            fernet_key=fernet_key,
+            unique_id=fernet_key,
             account_created_on=account_created_on,
             signup_status=signup_status,
             account_status=account_status,
@@ -59,7 +59,7 @@ def get_current_user_fernet_key(email):
     try:
         user_data = session.query(user_data_model.UserData).filter(user_data_model.UserData.email == email).first()
         if user_data:
-            return user_data.fernet_key
+            return user_data.unique_id
         else:
             return False
     except Exception as e:
