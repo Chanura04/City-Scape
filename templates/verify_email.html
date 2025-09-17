@@ -9,8 +9,10 @@
                     <button type="submit" class="btn btn-verify">Submit</button>
                     <button type="button" class="btn btn-verify" onclick="window.location.href='{{ url_for('auth.signup') }}'">Send Again</button>
                 </div>
-            <p style="color: red;"><b> {{ error}} </b></p>
+
         </form>
+                        <h4 >{{error}}</h4>
+
 </div>
 
 
