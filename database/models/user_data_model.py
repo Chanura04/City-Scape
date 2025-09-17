@@ -15,7 +15,7 @@ class UserData(Base):
 
     account_created_on = Column(DateTime, nullable=False)
     account_updated_on = Column(DateTime, nullable=False)
-    is_filled_details= Column(Boolean, nullable=False)
+
     role = Column(String, nullable=False,default="user")
 
     signup_status = Column(Boolean, nullable=False)

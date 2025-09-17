@@ -34,7 +34,7 @@ def store_user_data(first_name, last_name, email, password,fernet_key,account_cr
         print(user_data.last_name)
         print(user_data.account_created_on)
         print(user_data.account_updated_on)
-        print(user_data.is_filled_details)
+
         session.add(user_data)
         session.commit()
         return True

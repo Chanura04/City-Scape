@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -8,8 +8,8 @@ class EventData(Base):
     __tablename__ = 'event_data'
 
     id = Column(Integer, primary_key=True)
-    unique_id = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    unique_id = Column(String, ForeignKey('log_data.unique_id'),nullable=False)
+    email = Column(String,ForeignKey('userdata.email'), nullable=False)
     event_name = Column(String)
     event_date = Column(String)
     event_time = Column(String)

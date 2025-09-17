@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime,ForeignKey
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -8,8 +8,8 @@ class ImageData(Base):
     __tablename__ = 'image_data'
 
     id = Column(Integer, primary_key=True)
-    unique_id = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    unique_id = Column(String,ForeignKey('log_data.unique_id'), nullable=False)
+    email = Column(String,ForeignKey('userdata.email'), nullable=False)
     image_url = Column(String)
     image_name = Column(String)
     updated_time = Column(DateTime, nullable=False)
