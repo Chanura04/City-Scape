@@ -16,7 +16,7 @@ import json
 import urllib.parse
 from helpers import current_local_time
 import logging
-from database.database import get_event_data, store_event_data_db, get_image_data, add_image_data, \
+from database.database import get_current_user_unique_id, get_event_data, store_event_data_db, get_image_data, add_image_data, \
     get_country_or_city_input, get_current_query_data, store_log_data_db, store_weather_data_db, add_near_city_data_db, \
     get_near_cities_data
 
@@ -29,7 +29,8 @@ def get_map_data():
     Returns: [map_html, country_date, country_time, country_code] or error message
     """
     try:
-        country_or_city_input = get_country_or_city_input(session.get('log_data_unique_id'))
+        unique_id=get_current_user_unique_id(session.get('email'))
+        country_or_city_input = get_country_or_city_input(unique_id)
 
         if not country_or_city_input:
             logging.error("No country or city input found")
@@ -262,7 +263,8 @@ def show_page_one_data(city_name):
             # Log the error in database
             try:
                 local_time = current_local_time()
-                stored_data = get_current_query_data(session.get('log_data_unique_id'))
+                unique_id=get_current_user_unique_id(session.get('email'))
+                stored_data = get_current_query_data(unique_id)
                 if stored_data:
                     store_log_data_db(
                         stored_data[0],
@@ -316,12 +318,11 @@ def show_page_one_data(city_name):
 
         # Store weather data in database - only if everything succeeded
         try:
-            unique_id = str(uuid.uuid4())
-            session['weather_data_unique_id'] = unique_id
+            unique_id = get_current_user_unique_id(session.get('email'))
 
             store_weather_data_db(
                 email=session.get('email'),
-                unique_id=session.get('log_data_unique_id'),
+                unique_id=unique_id,
                 reference_time=reference_time,
                 details_about=country_or_city_input,
                 detailed_status=detailed_status,
@@ -343,7 +344,7 @@ def show_page_one_data(city_name):
 
             # Log successful weather fetch
             local_time = current_local_time()
-            stored_data = get_current_query_data(session.get('log_data_unique_id'))
+            stored_data = get_current_query_data(unique_id)
             if stored_data:
                 store_log_data_db(
                     stored_data[0],
@@ -485,7 +486,8 @@ def show_page_one_data(city_name):
         # Try to log the error
         try:
             local_time = current_local_time()
-            stored_data = get_current_query_data(session.get('log_data_unique_id'))
+            unique_id = get_current_user_unique_id(session.get('email'))
+            stored_data = get_current_query_data(unique_id)
             if stored_data:
                 store_log_data_db(
                     stored_data[0],
@@ -504,7 +506,8 @@ def get_pexels_data():
     Returns: List of image dictionaries or False on error
     """
     try:
-        country_or_city_input = get_country_or_city_input(session.get('log_data_unique_id'))
+        unique_id = get_current_user_unique_id(session.get('email'))
+        country_or_city_input = get_country_or_city_input(unique_id)
 
         if not country_or_city_input:
             logging.error("No country or city input found for Pexels")
@@ -535,10 +538,11 @@ def get_pexels_data():
                         "url": photo.url() or "#"
                     }
                     img_data.append(img_data_dict)
+                    unique_id = get_current_user_unique_id(session.get('email'))
 
                     # Store in database
                     add_image_data(
-                        session.get('log_data_unique_id'),
+                        unique_id,
                         session.get('email'),
                         photo.url(),
                         photo.img_name(),
@@ -551,7 +555,8 @@ def get_pexels_data():
 
             # Log success
             try:
-                stored_data = get_current_query_data(session.get('log_data_unique_id'))
+                unique_id = get_current_user_unique_id(session.get('email'))
+                stored_data = get_current_query_data(unique_id)
                 if stored_data:
                     local_time = current_local_time()
                     store_log_data_db(
@@ -575,7 +580,8 @@ def get_pexels_data():
 
         # Try to use stored data and log error
         try:
-            stored_image_data = get_image_data(session.get('log_data_unique_id'))
+            unique_id = get_current_user_unique_id(session.get('email'))
+            stored_image_data = get_image_data(unique_id)
             if stored_image_data:
                 add_image_data(
                     session.get('log_data_unique_id'),
@@ -585,7 +591,7 @@ def get_pexels_data():
                     current_local_time(),
                     str(e))
 
-            stored_log_data = get_current_query_data(session.get('log_data_unique_id'))
+            stored_log_data = get_current_query_data(unique_id)
             if stored_log_data:
                 local_time = current_local_time()
                 store_log_data_db(
@@ -651,10 +657,10 @@ def show_near_places():
                     "distance": location.get("distance", "N/A")
                 }
                 city_list.append(city_dict)
-
+                unique_id = get_current_user_unique_id(session.get('email'))
                 # Store in database
                 add_near_city_data_db(
-                    session.get('log_data_unique_id'),
+                    unique_id,
                     session.get('email'),
                     wikiDataId,
                     location.get("city"),
@@ -667,7 +673,8 @@ def show_near_places():
 
         # Log success
         try:
-            stored_log_data = get_current_query_data(session.get('log_data_unique_id'))
+            unique_id = get_current_user_unique_id(session.get('email'))
+            stored_log_data = get_current_query_data(unique_id)
             if stored_log_data:
                 local_time = current_local_time()
                 store_log_data_db(
@@ -686,7 +693,8 @@ def show_near_places():
 
         # Try to use stored data and log error
         try:
-            stored_near_cities_data = get_near_cities_data(session.get('log_data_unique_id'))
+            unique_id = get_current_user_unique_id(session.get('email'))
+            stored_near_cities_data = get_near_cities_data(unique_id)
             if stored_near_cities_data:
                 add_near_city_data_db(
                     session.get('log_data_unique_id'),
@@ -697,7 +705,7 @@ def show_near_places():
                     current_local_time(),
                     str(e))
 
-            stored_log_data = get_current_query_data(session.get('log_data_unique_id'))
+            stored_log_data = get_current_query_data(unique_id)
             if stored_log_data:
                 local_time = current_local_time()
                 store_log_data_db(
@@ -718,7 +726,8 @@ def event_data():
     Returns: List of event dictionaries or False on error
     """
     try:
-        country_or_city_input = get_country_or_city_input(session.get('log_data_unique_id'))
+        unique_id= get_current_user_unique_id(session.get('email'))
+        country_or_city_input = get_country_or_city_input(unique_id)
 
         TICKETMASTER_API_KEY = os.environ.get("TICKETMASTER_API_KEY")
 
@@ -741,8 +750,9 @@ def event_data():
         # Store events in database
         for event in events:
             try:
+                unique_id = get_current_user_unique_id(session.get('email'))
                 store_event_data_db(
-                    session.get('log_data_unique_id'),
+                    unique_id,
                     session.get('email'),
                     event.get("name", "Unknown Event"),
                     event.get("date", "N/A"),
@@ -758,7 +768,8 @@ def event_data():
 
         # Log success
         try:
-            stored_log_data = get_current_query_data(session.get('log_data_unique_id'))
+            unique_id = get_current_user_unique_id(session.get('email'))
+            stored_log_data = get_current_query_data(unique_id)
             if stored_log_data:
                 local_time = current_local_time()
                 store_log_data_db(
@@ -777,7 +788,8 @@ def event_data():
 
         # Try to use stored data and log error
         try:
-            stored_log_data = get_current_query_data(session.get('log_data_unique_id'))
+            unique_id = get_current_user_unique_id(session.get('email'))
+            stored_log_data = get_current_query_data(unique_id)
             if stored_log_data:
                 local_time = current_local_time()
                 store_log_data_db(
@@ -787,7 +799,7 @@ def event_data():
                     local_time,
                     str(e))
 
-            stored_event_data = get_event_data(session.get('log_data_unique_id'))
+            stored_event_data = get_event_data(unique_id)
             if stored_event_data:
                 store_event_data_db(
                     session.get('log_data_unique_id'),

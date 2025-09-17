@@ -1,7 +1,7 @@
 import uuid
 
 from flask import Blueprint, render_template,session,flash, redirect, url_for, request
-from database.database import store_log_data_db
+from database.database import store_log_data_db,get_current_user_unique_id
 from helpers import current_local_time
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -23,7 +23,7 @@ def dashboard():
         user_role = session.get('role', 'user')
         country_or_city_input = request.form.get("country_or_city_input")
         # sri_lanka_tz = ZoneInfo("Asia/Colombo")
-        unique_id = session.get('log_data_unique_id')
+        unique_id = get_current_user_unique_id(session.get('email'))
         # local_time = datetime.now(sri_lanka_tz)
         local_time =  current_local_time()
         session['current_query_time'] = local_time

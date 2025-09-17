@@ -54,7 +54,7 @@ def check_user_exists(email):
     except Exception as e:
         print(e)
 
-def get_current_user_fernet_key(email):
+def get_current_user_unique_id(email):
     session = SessionLocal()
     try:
         user_data = session.query(user_data_model.UserData).filter(user_data_model.UserData.email == email).first()

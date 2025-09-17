@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
+
 
 from .base import Base
 class LogData(Base):

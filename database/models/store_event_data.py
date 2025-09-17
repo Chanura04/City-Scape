@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 
-from sqlalchemy.ext.declarative import declarative_base
+
 
 from .base import Base
 class EventData(Base):

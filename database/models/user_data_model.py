@@ -1,6 +1,4 @@
 from sqlalchemy import Column, String, Integer, DateTime, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-from torch import unique
 
 from .base import Base
 class UserData(Base):

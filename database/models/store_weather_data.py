@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer, DateTime, Boolean, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
+
 
 from .base import Base
 class WeatherData(Base):
