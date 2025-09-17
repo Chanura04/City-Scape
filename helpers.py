@@ -13,17 +13,17 @@ class Password:
 
     def check_password(self, hashed_password, plain_password):
         return check_password_hash(hashed_password, plain_password)
-
-class APIKeyHandler:
-    def __init__(self, fernet_key):
-        self.fernet_key = fernet_key
-        self.cipher = Fernet(self.fernet_key)
-
-    def encrypt_key(self, key):
-        return self.cipher.encrypt(key.encode()).decode()
-
-    def decrypt_key(self, encrypted_key):
-        return self.cipher.decrypt(encrypted_key.encode()).decode()
+#
+# class APIKeyHandler:
+#     def __init__(self, fernet_key):
+#         self.fernet_key = fernet_key
+#         self.cipher = Fernet(self.fernet_key)
+#
+#     def encrypt_key(self, key):
+#         return self.cipher.encrypt(key.encode()).decode()
+#
+#     def decrypt_key(self, encrypted_key):
+#         return self.cipher.decrypt(encrypted_key.encode()).decode()
 
 
 def current_local_time():

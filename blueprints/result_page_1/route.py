@@ -216,8 +216,8 @@ def get_map_data():
         return "Map service temporarily unavailable"
 
 
-@result_page_1_bp.route("/data")
-def show_page_one_data():
+@result_page_1_bp.route("/data/<string:city_name>")
+def show_page_one_data(city_name):
     """
     Main route handler for displaying weather and location data
     """
@@ -227,7 +227,8 @@ def show_page_one_data():
 
     try:
         # Get user input
-        country_or_city_input = get_country_or_city_input(session.get('log_data_unique_id'))
+        # country_or_city_input = get_country_or_city_input(session.get('log_data_unique_id'))
+        country_or_city_input=city_name
 
         if not country_or_city_input:
             logging.error("No country or city input found in session")

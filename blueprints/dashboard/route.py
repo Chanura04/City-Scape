@@ -23,11 +23,11 @@ def dashboard():
         user_role = session.get('role', 'user')
         country_or_city_input = request.form.get("country_or_city_input")
         # sri_lanka_tz = ZoneInfo("Asia/Colombo")
-        unique_id = str(uuid.uuid4())
+        unique_id = session.get('log_data_unique_id')
         # local_time = datetime.now(sri_lanka_tz)
         local_time =  current_local_time()
         session['current_query_time'] = local_time
-        session['log_data_unique_id'] = unique_id
+
         store_log_data_db(
             city_or_country=country_or_city_input,
             local_time=local_time,
@@ -35,8 +35,9 @@ def dashboard():
             unique_id=unique_id,
             query_status="User Input Store to Database"
         )
+        print(unique_id)
         # return render_template("result_page.html" ,user_input=country_or_city_input,role=user_role )
-        return redirect(url_for("result_page_1.show_page_one_data"))
+        return redirect(url_for("result_page_1.show_page_one_data",city_name=country_or_city_input))
 
 
     if request.method == "GET":

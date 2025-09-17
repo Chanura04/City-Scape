@@ -1,13 +1,22 @@
 # blueprints/auth/routes.py
+import os
+import random
+import string
+import uuid
 
+from dotenv import load_dotenv
+load_dotenv()
+import logging
 from flask import Blueprint, render_template, request, redirect, url_for, session
-
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import smtplib
 
 # Import your database and helper functions from a common module
 from database.database import store_user_data,check_user_exists,get_user_password,get_user_role,get_user_first_name,update_accountUpdatedOn_column
 from helpers import Password
 from cryptography.fernet import Fernet
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 auth_bp = Blueprint('auth', __name__, template_folder='templates', static_folder='static')
 
@@ -52,7 +61,7 @@ def login():
 
         else:
             # otherwise show homepages
-            return render_template("login.html",error="User does not exist...Please signup first!")
+            return render_template("login.html",error="User does not exist.Please Sign Up first!")
     if request.method == "GET":
         return render_template("login.html",error="")
 
@@ -66,7 +75,7 @@ def signup():
             try:
 
                 if exists:
-                    return render_template("login.html", error="username already exists here!")
+                    return render_template("login.html", error="User Already Exists Here!")
 
                 else:
 
@@ -74,26 +83,43 @@ def signup():
                     last_name = request.form.get("last_name")
                     email = request.form.get("email")
                     password = request.form.get("password")
-                    print("📌 DEBUG Signup values:", first_name, last_name, email, password)
+                    session['signup_first_name']=first_name
+                    session['signup_last_name']=last_name
+                    session['signup_email']=email
+                    session['signup_password']=password
 
-                    pass_obj = Password()
-                    encrypt_password = pass_obj.set_password(password)
+                    otp = ''.join(random.choices(string.digits, k=6))
+                    session['otp']=otp
+                    print("OTP:",otp)
 
-                    fernet_key = Fernet.generate_key()
-                    fernet_key_str = fernet_key.decode()
+                    otp_expiry = datetime.now() + timedelta(seconds=50)
+                    sender_email = "chanurakarunanayake12@gmail.com"
+                    app_password = os.getenv("GMAIL_APP_PASSWORD")
 
-                    sri_lanka_tz = ZoneInfo("Asia/Colombo")
-                    local_time = datetime.now(sri_lanka_tz)
-                    signup_status=True
-                    account_status=True
+                    # Build email
+                    message = MIMEMultipart()
+                    message["From"] = sender_email
+                    message["To"] = session.get('signup_email')
+                    message["Subject"] = "Your OTP Code"
 
-                    store_user_data(first_name, last_name, email, encrypt_password, fernet_key_str,local_time,signup_status,account_status,"user")
+                    body = f"Your verification code is: {otp}"
+                    message.attach(MIMEText(body, "plain"))
+                    body = f"Your verification code is: {otp}"
+                    message.attach(MIMEText(body, "plain"))
+                    try:
+                        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+                            server.starttls()
+                            server.login(sender_email, app_password)
+                            server.sendmail(sender_email, session.get('signup_email'), message.as_string())
+                            session["otp_sent_message"] = True
+                            return redirect(url_for("auth.verify_email"))
 
-
-                    session["username"] = first_name
-                    return redirect(url_for("auth.login"))
+                    except Exception as e:
+                          logging.error(f"Error sending OTP: {e}")
             except Exception as e:
                 print(e)
+        else:
+            return render_template("signup.html", error="Please enter valid details!")
 
     if request.method == "GET":
         return render_template("signup.html")
@@ -109,3 +135,48 @@ def logout():
         session.clear()
         return redirect(url_for("auth.login"))
     return redirect(url_for("dashboard.dashboard"))
+
+@auth_bp.route("/email_verification", methods=["POST", "GET"])
+def verify_email():
+    if request.method == "GET":
+        return render_template("verify_email.html")
+    if request.method == "POST":
+        otp_password = request.form.get("otp_password")
+        if session.get("otp_sent_message"):
+            if otp_password==session.get('otp'):
+                session['otp'] = None
+
+                first_name = session.get('signup_first_name')
+                last_name = session.get('signup_last_name')
+                email = session.get('signup_email')
+                password = session.get('signup_password')
+
+                print("📌 DEBUG Signup values:", first_name, last_name, email, password)
+
+                pass_obj = Password()
+                encrypt_password = pass_obj.set_password(password)
+
+                # fernet_key = Fernet.generate_key()
+                # fernet_key_str = fernet_key.decode()
+                unique_id = str(uuid.uuid4())
+                session['log_data_unique_id'] = unique_id
+
+                sri_lanka_tz = ZoneInfo("Asia/Colombo")
+                local_time = datetime.now(sri_lanka_tz)
+                signup_status = True
+                account_status = True
+
+                store_user_data(first_name, last_name, email, encrypt_password, unique_id, local_time, signup_status,
+                                account_status, "user")
+
+                session["username"] = first_name
+                return redirect(url_for("auth.login"))
+
+            else:
+                session['otp'] = None
+                return render_template("verify_email.html", error="Invalid OTP...Please try again!")
+        else:
+            return redirect(url_for("auth.signup"))
+
+
+

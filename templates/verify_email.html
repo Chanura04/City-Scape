@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+{% block body %}
+
+<div class="container">
+    <h2 class="form_head_topic">Email Verification</h2>
+        <form action="{{url_for('auth.verify_email')}}" method="POST" id="auth-form">
+            <div class="form-row">
+                    <input type="password" name="otp_password" id="password" placeholder="OTP Password" class="input-field" required>
+                    <button type="submit" class="btn btn-verify">Submit</button>
+                    <button type="button" class="btn btn-verify" onclick="window.location.href='{{ url_for('auth.signup') }}'">Send Again</button>
+                </div>
+            <p style="color: red;"><b> {{ error}} </b></p>
+        </form>
+</div>
+
+
+{% endblock %}
