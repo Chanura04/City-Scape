@@ -33,3 +33,10 @@ def create_app():
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True)
+
+
+
+
+#     (.venv) PS C:\Github Projects\Data-Compass> docker build -t chanura04/data-compass-web:latest .
+# (.venv) PS C:\Github Projects\Data-Compass> docker login
+# (.venv) PS C:\Github Projects\Data-Compass> docker push chanura04/data-compass-web:latest

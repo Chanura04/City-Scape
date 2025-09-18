@@ -61,7 +61,7 @@ def get_map_data():
                 if "data" in data and data["data"]:
                     location_data = data["data"][0]
                     location_data["type"] = "city"
-                    print(f"Found as city: {location_data}")
+                    logging.info(f"Found as city: {location_data}")
         except Exception as e:
             logging.warning(f"Error searching cities: {e}")
 
@@ -98,7 +98,7 @@ def get_map_data():
                                     "longitude": capital_city.get("longitude"),
                                     "type": "country_capital"
                                 }
-                                print(f"Found country capital: {location_data}")
+                                logging.info(f"Found country capital: {location_data}")
 
                         # If capital not found, use country data if available
                         if not location_data and country_info.get("latitude") and country_info.get("longitude"):
@@ -110,7 +110,7 @@ def get_map_data():
                                 "longitude": country_info.get("longitude"),
                                 "type": "country"
                             }
-                            print(f"Using country center: {location_data}")
+                            logging.info(f"Using country center: {location_data}")
 
             except Exception as e:
                 logging.warning(f"Error searching countries: {e}")
@@ -133,7 +133,7 @@ def get_map_data():
             logging.error("Incomplete location data received")
             return "Invalid location data received"
 
-        print(f"lat: {lat}, lon: {lon}, type: {location_type}")
+        logging.info(f"lat: {lat}, lon: {lon}, type: {location_type}")
 
         # 4) Get local time for that location
         country_date = "N/A"
@@ -235,7 +235,7 @@ def show_page_one_data(city_name):
             logging.error("No country or city input found in session")
             return render_template("dashboard.html", error="Please enter a valid city name!")
 
-        print(f"country_or_city_input: {country_or_city_input}")
+        logging.info(f"country_or_city_input: {country_or_city_input}")
 
         # Get weather data - THIS IS THE CRITICAL SECTION
         OPENWEATHER_KEY = os.getenv("OPENWEATHER")

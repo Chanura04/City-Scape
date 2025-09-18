@@ -51,7 +51,7 @@ def login():
             session['email']=email
             if pass_ob.check_password(user_db_stored_password,password) :
                 first_name = get_user_first_name(email)
-                print(first_name)
+                logging.info(first_name)
                 session['username'] = first_name
                 session['toDashboard'] = True
                 update_accountUpdatedOn_column(session['email'])
@@ -90,7 +90,7 @@ def signup():
 
                     otp = ''.join(random.choices(string.digits, k=6))
                     session['otp']=otp
-                    print("OTP:",otp)
+                    logging.info("OTP:",otp)
 
                     otp_expiry = datetime.now() + timedelta(seconds=50)
                     sender_email = "chanurakarunanayake12@gmail.com"
@@ -151,7 +151,7 @@ def verify_email():
                 email = session.get('signup_email')
                 password = session.get('signup_password')
 
-                print("📌 DEBUG Signup values:", first_name, last_name, email, password)
+                logging.info("📌 DEBUG Signup values:", first_name, last_name, email, password)
 
                 pass_obj = Password()
                 encrypt_password = pass_obj.set_password(password)

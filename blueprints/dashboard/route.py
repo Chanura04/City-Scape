@@ -1,5 +1,5 @@
 import uuid
-
+import logging
 from flask import Blueprint, render_template,session,flash, redirect, url_for, request
 from database.database import store_log_data_db,get_current_user_unique_id
 from helpers import current_local_time
@@ -35,7 +35,7 @@ def dashboard():
             unique_id=unique_id,
             query_status="User Input Store to Database"
         )
-        print(unique_id)
+        logging.info(unique_id)
         # return render_template("result_page.html" ,user_input=country_or_city_input,role=user_role )
         return redirect(url_for("result_page_1.show_page_one_data",city_name=country_or_city_input))
 
