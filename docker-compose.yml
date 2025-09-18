@@ -15,4 +15,4 @@ services:
       - redis
     environment:
 
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=postgresql+psycopg2://postgres:2004@host.docker.internal:5432/Place-Pulse
