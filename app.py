@@ -40,3 +40,5 @@ if __name__ == '__main__':
 #     (.venv) PS C:\Github Projects\Data-Compass> docker build -t chanura04/data-compass-web:latest .
 # (.venv) PS C:\Github Projects\Data-Compass> docker login
 # (.venv) PS C:\Github Projects\Data-Compass> docker push chanura04/data-compass-web:latest
+
+#when run this locally unders the .yml file - DATABASE_URL=postgresql+psycopg2://postgres:2004@host.docker.internal:5432/Place-Pulse

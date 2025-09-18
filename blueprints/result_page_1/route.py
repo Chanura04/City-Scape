@@ -513,7 +513,8 @@ def get_pexels_data():
             logging.error("No country or city input found for Pexels")
             return False
 
-        API_KEY = os.environ.get("PIXELS_API_KEY")
+        API_KEY = os.getenv("PIXELS_API_KEY")
+
 
         if not API_KEY:
             logging.error("Pexels API key not found")
@@ -729,7 +730,8 @@ def event_data():
         unique_id= get_current_user_unique_id(session.get('email'))
         country_or_city_input = get_country_or_city_input(unique_id)
 
-        TICKETMASTER_API_KEY = os.environ.get("TICKETMASTER_API_KEY")
+        TICKETMASTER_API_KEY = os.getenv("TICKETMASTER_API_KEY")
+
 
         if not TICKETMASTER_API_KEY:
             logging.error("Ticketmaster API key not found")

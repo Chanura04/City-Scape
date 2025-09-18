@@ -6,7 +6,7 @@ services:
 
   web:
     build: .
-    command: gunicorn --bind 0.0.0.0:5000 'app:create_app()'
+    command: gunicorn --bind 0.0.0.0:$PORT 'app:create_app'
     volumes:
       - .:/app
     ports:
@@ -14,5 +14,5 @@ services:
     depends_on:
       - redis
     environment:
-#      - DATABASE_URL=postgresql+psycopg2://postgres:2004@host.docker.internal:5432/Place-Pulse
+
       - DATABASE_URL=${DATABASE_URL}
