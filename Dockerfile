@@ -15,4 +15,7 @@ COPY . .
 EXPOSE 5000
 
 # The CMD will be overridden by docker-compose for each service
-CMD ["python", "app.py"]
+#CMD ["python", "app.py"]
+
+#Railway only listen to Dockerfile
+CMD exec gunicorn --bind 0.0.0.0:$PORT app:create_app
