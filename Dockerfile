@@ -18,4 +18,4 @@ EXPOSE 5000
 #CMD ["python", "app.py"]
 
 #Railway only listen to Dockerfile
-CMD exec gunicorn --bind 0.0.0.0:$PORT app:create_app
+CMD exec gunicorn --bind 0.0.0.0:$PORT 'app:create_app()'
