@@ -10,6 +10,8 @@ def clear_session_files():
     for file in glob.glob("flask_session/*"):
         os.remove(file)
 
+
+ 
 def create_app():
     app = Flask(__name__)
     app.secret_key = os.getenv("SECRET_KEY", "default-secret-key")

@@ -102,8 +102,8 @@ def signup():
                     message["To"] = session.get('signup_email')
                     message["Subject"] = "Your OTP Code"
 
-                    body = f"Your verification code is: {otp}"
-                    message.attach(MIMEText(body, "plain"))
+                    # body = f"Your verification code is: {otp}"
+                    # message.attach(MIMEText(body, "plain"))
                     body = f"Your verification code is: {otp}"
                     message.attach(MIMEText(body, "plain"))
                     try:
